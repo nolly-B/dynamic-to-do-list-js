@@ -1,22 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const storedTasks = localStorage.getItem("tasks");
-  const tasksArray = JSON.parse(storedTasks) || [];
+  function loadTasks() {
+    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    storedTasks.forEach((taskText) => addTask(taskText, false));
+  }
 
-  tasksArray.forEach((task) => {
-    const newTask = document.createElement("li");
-    newTask.textContent = task;
-    taskList.appendChild(newTask);
+  document.addEventListener("DOMContentLoaded", () => {
+    loadTasks();
   });
 
   const addButton = document.getElementById("add-task-btn");
   const taskInput = document.getElementById("task-input");
   const taskList = document.getElementById("task-list");
 
-  function addTask() {
-    const taskListArray = [...taskList.children].map(
-      (item) => item.textContent
-    );
-    localStorage.setItem("tasks", JSON.stringify(taskListArray));
+  function addTask(taskText, save = true) {
+    if (save) {
+      const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      storedTasks.push(taskText);
+      localStorage.setItem("tasks", JSON.stringify(storedTasks));
+    }
 
     let taskText = taskInput.value.trim();
 
